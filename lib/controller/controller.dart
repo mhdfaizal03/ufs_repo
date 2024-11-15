@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -22,10 +23,14 @@ class GetXModel extends GetxController {
 
   void getData() async {
     isLoading = true;
-    var data = await ApiServices().fetchDataFromApi();
-    if (data != null) {
-      isLoading = false;
-      itemList.value = data;
+    try {
+      var data = await ApiServices().fetchDataFromApi();
+      if (data != null) {
+        isLoading = false;
+        itemList.value = data;
+      }
+    } catch (e) {
+      log(e.toString());
     }
   }
 
@@ -38,16 +43,20 @@ class GetXModel extends GetxController {
       required String category,
       required String description,
       required int id}) async {
-    var data = await ApiServices().createDataToApi(context,
-        name: name,
-        price: price,
-        image: image,
-        category: category,
-        description: description,
-        id: id);
-
-    if (data != null) {
-      itemList.add(data);
+    try {
+      var data = await ApiServices().createDataToApi(context,
+          name: name,
+          price: price,
+          image: image,
+          category: category,
+          description: description,
+          id: id);
+      if (data != null) {
+        itemList.add(data);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("error : ${e.toString()}")));
     }
   }
 
@@ -55,8 +64,13 @@ class GetXModel extends GetxController {
 
   void deleteData(int? id, BuildContext context) {
     isLoading = false;
-    var data = ApiServices().deleteDataFromApi(id, context);
-    itemList.remove(data);
+    try {
+      var data = ApiServices().deleteDataFromApi(id, context);
+      itemList.remove(data);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   // image source to pick image
@@ -64,9 +78,13 @@ class GetXModel extends GetxController {
   void pickImage(ImageSource source) async {
     final picker = await ImagePicker().pickImage(source: source);
 
-    if (picker != null) {
-      Get.back();
-      image = File(picker.path);
+    try {
+      if (picker != null) {
+        Get.back();
+        image = File(picker.path);
+      }
+    } catch (e) {
+      log(e.toString());
     }
   }
 

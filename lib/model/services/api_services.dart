@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,16 +13,20 @@ class ApiServices {
   Future<List<ItemModel>?> fetchDataFromApi() async {
     var response = await http.get(Uri.parse('$url/products'));
 
-    if (response.statusCode == 200) {
-      var decodedBody = json.decode(response.body);
+    try {
+      if (response.statusCode == 200) {
+        var decodedBody = json.decode(response.body);
 
-      List<ItemModel> model = [];
+        List<ItemModel> model = [];
 
-      for (var data in decodedBody) {
-        model.add(ItemModel.fromJson(data));
+        for (var data in decodedBody) {
+          model.add(ItemModel.fromJson(data));
+        }
+
+        return model;
       }
-
-      return model;
+    } catch (e) {
+      log(e.toString());
     }
     return null;
   }
@@ -44,12 +49,17 @@ class ApiServices {
       "id": id,
     });
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("deleted data Successfully")));
-      var decodedBody = json.decode(response.body);
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("deleted data Successfully")));
 
-      return ItemModel.fromJson(decodedBody as Map<String, dynamic>);
+        var decodedBody = json.decode(response.body);
+
+        return ItemModel.fromJson(decodedBody as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log(e.toString());
     }
     return null;
   }
@@ -58,9 +68,13 @@ class ApiServices {
   Future<ItemModel?> deleteDataFromApi(int? id, BuildContext context) async {
     var response = await http.delete(Uri.parse('$url/products/$id'));
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("deleted data Successfully")));
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("deleted data Successfully")));
+      }
+    } catch (e) {
+      log(e.toString());
     }
     return null;
   }

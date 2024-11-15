@@ -1,7 +1,7 @@
 class ItemModel {
- int? id;
+  int? id;
   String? name;
-  double? price;
+  dynamic price;
   String? description;
   String? category;
   String? image;
@@ -16,12 +16,12 @@ class ItemModel {
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
-        name: json["title"],
-        image: json["image"],
-        price: json["price"],
-        id: json["id"],
-        description: json["description"],
-        category: json["category"],
-        );
+      name: json["title"],
+      image: json["image"],
+      price: json["price"],
+      id: json["id"],
+      description: json["description"],
+      category: json["category"],
+    );
   }
 }
