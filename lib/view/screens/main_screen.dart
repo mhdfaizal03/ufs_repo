@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ufs_testing/utils/widgets/custom_textfield.dart';
 import 'package:ufs_testing/view/screens/detail_screen.dart';
-import 'package:ufs_testing/view_model/controller.dart';
+import 'package:ufs_testing/controller/controller.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
